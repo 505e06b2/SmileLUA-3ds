@@ -1,0 +1,2 @@
+The makefiles in both lua and lua/src are set to generic, and CC/AR are set to the ones used by devkitpro
+They must also have the same $(ARCH) as the main project
