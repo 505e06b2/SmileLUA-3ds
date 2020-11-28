@@ -18,7 +18,7 @@ while os.mainLoop() and running do
 			if ret[1] == false then
 				shell.printError(ret[2])
 			else
-				print("<", table.unpack(ret))
+				--print("<", ret[2])
 			end
 		end
 	end

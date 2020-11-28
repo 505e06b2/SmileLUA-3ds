@@ -1,0 +1,3 @@
+local url = ...
+
+print(io.http.get(url))

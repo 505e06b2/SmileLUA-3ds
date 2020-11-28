@@ -6,6 +6,10 @@
 
 #include <3ds.h>
 #include <unistd.h> //getcwd
+#include <stdlib.h>
+#include <string.h>
+
+#include "http.h"
 
 void luaextend_io(lua_State *);
 

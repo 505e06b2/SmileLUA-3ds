@@ -66,6 +66,23 @@ static int lua_readControls(lua_State *L) {
 	return 1;
 }
 
+//HTTP
+static int lua_http_get(lua_State *L) {
+	const char *url = luaL_checkstring(L, 1);
+	if(strncmp(url, "http", 4) != 0) {
+		luaL_error(L, "Not an HTTP URL");
+		return 0;
+	}
+
+	char *ret = http_get(url);
+	if(ret) {
+		lua_pushstring(L, ret);
+		free(ret);
+		return 1;
+	}
+	return 0;
+}
+
 void luaextend_io(lua_State *L) {
 	initKeyboard();
 
@@ -76,5 +93,12 @@ void luaextend_io(lua_State *L) {
 
 		lua_pushstring(L, "readControls");
 		lua_pushcfunction(L, lua_readControls);
+		lua_settable(L, -3);
+
+		lua_pushstring(L, "http");
+		lua_newtable(L);
+			lua_pushstring(L, "get");
+			lua_pushcfunction(L, lua_http_get);
+			lua_settable(L, -3);
 		lua_settable(L, -3);
 }
