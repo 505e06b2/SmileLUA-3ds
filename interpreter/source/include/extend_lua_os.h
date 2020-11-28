@@ -6,6 +6,7 @@
 
 #include <3ds.h>
 #include <unistd.h> //getcwd
+#include <dirent.h>
 
 void luaextend_os(lua_State *);
 

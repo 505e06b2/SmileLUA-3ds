@@ -1,2 +1,3 @@
 print("\x1b[2J") --clear screen
-dofile("bin/shell.lua")
+os.chdir("sdmc:/")
+dofile("romfs:/bin/shell.lua")
