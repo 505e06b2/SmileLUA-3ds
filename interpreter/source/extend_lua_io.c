@@ -78,6 +78,15 @@ static int lua_readtouchscreen(lua_State *L) {
 	return 0;
 }
 
+static int lua_readqr(lua_State *L) {
+	char *str = qr_read();
+	if(str) {
+		lua_pushstring(L, str);
+		free(str);
+	}
+	return 0;
+}
+
 static int lua_writebottom(lua_State *L) {
 	int top = lua_gettop(L);
 	PrintConsole *previous_console = consoleSelect(&console_bottom);

@@ -27,16 +27,16 @@ local function printHelp()
 	io.writeBottom("\n")
 	io.writeBottom("\n")
 	io.writeBottom("\n")
-	io.writeBottom("      \x1b[36;1m[\x1b[0mA \x1b[36;1m|\x1b[0m -> \x1b[36;1m|\x1b[0m touch the screen\x1b[36;1m]\x1b[0m\n")
+	io.writeBottom("         \x1b[36;1m[\x1b[0m A \x1b[36;1m|\x1b[0m Right \x1b[36;1m|\x1b[0m Touch \x1b[36;1m]\x1b[0m\n")
 	io.writeBottom("             \x1b[31;1mOpen Keyboard\x1b[0m\n")
 	io.writeBottom("\n")
-	io.writeBottom("               \x1b[36;1m[\x1b[0mY \x1b[36;1m|\x1b[0m <-\x1b[36;1m]\x1b[0m\n")
+	io.writeBottom("              \x1b[36;1m[\x1b[0m Y \x1b[36;1m|\x1b[0m Left \x1b[36;1m]\x1b[0m\n")
 	io.writeBottom("            \x1b[31;1mExecute Command\x1b[0m\n")
 	io.writeBottom("\n")
-	io.writeBottom("               \x1b[36;1m[\x1b[0m^ \x1b[36;1m|\x1b[0m v\x1b[36;1m]\x1b[0m\n")
+	io.writeBottom("         \x1b[36;1m[\x1b[0m Up \x1b[36;1m|\x1b[0m X \x1b[36;1m/\x1b[0m Down \x1b[36;1m|\x1b[0m B \x1b[36;1m]\x1b[0m\n")
 	io.writeBottom("             \x1b[31;1mInput History\x1b[0m\n")
 	io.writeBottom("\n")
-	io.writeBottom("           \x1b[36;1m[\x1b[0mSelect \x1b[36;1m+\x1b[0m Start\x1b[36;1m]\x1b[0m\n")
+	io.writeBottom("          \x1b[36;1m[\x1b[0m Select \x1b[36;1m+\x1b[0m Start \x1b[36;1m]\x1b[0m\n")
 	io.writeBottom("                 \x1b[31;1mExit\x1b[0m\n")
 end
 
@@ -121,7 +121,7 @@ while os.consoleLoop() do
 
 	elseif controls["Y"] or controls["Left"] then
 		if input and string.len(input) > 0 then
-			replaceLine(input, input)
+			replaceLine(input, input) --removes "_"
 			io.write("\n")
 			local tokens = tokenise(input)
 			if tokens[1] == "exit" then
@@ -138,7 +138,7 @@ while os.consoleLoop() do
 					shell.printError(error)
 				end
 			end
-			os.consoleLoop() --in case the program running was GPU rendered
+			os.consoleLoop() --in case the program running was GPU rendered, this will clear the console
 			io.write(shell.ps1() .. "_")
 		end
 		input = ""
@@ -154,10 +154,10 @@ while os.consoleLoop() do
 			history_index = #history
 		end
 
-	elseif history_cooldown and (controls["Up"] or controls["Down"]) then
-	elseif controls["Up"] then
+	elseif history_cooldown and (controls["Up"] or controls["Down"] or controls["X"] or controls["B"]) then
+	elseif controls["Up"] or controls["X"] then
 		moveHistory(-1)
-	elseif controls["Down"] then
+	elseif controls["Down"] or controls["B"] then
 		moveHistory(1)
 	else
 		history_cooldown = false

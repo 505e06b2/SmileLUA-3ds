@@ -7,6 +7,7 @@ $(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>dev
 endif
 
 LUA ?= $(CURDIR)/lua
+QUIRC ?= $(CURDIR)/quirc
 TOPDIR ?= $(CURDIR)
 include $(DEVKITARM)/3ds_rules
 

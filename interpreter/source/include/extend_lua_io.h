@@ -10,6 +10,7 @@
 #include <string.h>
 
 #include "http.h"
+#include "qr.h"
 
 void luaextend_io(lua_State *);
 
