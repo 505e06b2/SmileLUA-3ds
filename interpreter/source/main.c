@@ -1,4 +1,6 @@
 #include <3ds.h>
+#include <citro2d.h>
+
 #include <stdio.h>
 #include <string.h> //strcmp
 #include <stdint.h>
@@ -9,19 +11,30 @@
 
 #include "extend_lua_io.h"
 #include "extend_lua_os.h"
+#include "extend_lua_table.h"
 
 #define ROM_ROOT "romfs:/"
 #define SD_ROOT "sdmc:/smilelua/"
 #define STARTUP "init.lua"
 
+C3D_RenderTarget *top_screen;
+PrintConsole console_bottom;
+PrintConsole console_top;
+
 int main() {
 	lua_State *L = NULL;
 
 	gfxInitDefault();
-	consoleInit(GFX_TOP, NULL);
+	consoleInit(GFX_BOTTOM, &console_bottom);
+	consoleInit(GFX_TOP, &console_top);
+
+	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
+	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
+	C2D_Prepare();
+	top_screen = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
 	if(romfsInit()) {
-		puts("\x1b[31mCan't initialise RomFS\x1b[0m");
+		puts("\x1b[31;1mCan't initialise RomFS\x1b[0m");
 	}
 
 	L = luaL_newstate(); // open Lua
@@ -29,6 +42,7 @@ int main() {
 	luaL_openlibs(L);
 	luaextend_io(L);
 	luaextend_os(L);
+	luaextend_table(L);
 
 	{
 		char buffer[1024] = {0};
@@ -46,8 +60,10 @@ int main() {
 	}
 
 	if(luaL_dofile(L, "init.lua")) {
-		printf("Lua Error: %s\n", lua_tostring(L, -1));
-		printf("Press Start to exit");
+		consoleSelect(&console_bottom);
+		printf("\x1b[2JPress Start to exit");
+		consoleSelect(&console_top);
+		printf("\x1b[2J\x1b[31;1mLua Error\x1b[0m\n%s", lua_tostring(L, -1));
 		while(aptMainLoop()) {
 			hidScanInput();
 
@@ -61,6 +77,8 @@ int main() {
 	}
 
 	lua_close(L);
+	C2D_Fini();
+	C3D_Fini();
 	gfxExit();
 	return 0;
 }

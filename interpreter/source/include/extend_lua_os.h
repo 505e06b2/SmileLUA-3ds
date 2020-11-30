@@ -5,6 +5,8 @@
 #include <lauxlib.h>
 
 #include <3ds.h>
+#include <citro2d.h>
+
 #include <unistd.h> //getcwd
 #include <dirent.h>
 

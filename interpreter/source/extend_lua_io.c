@@ -1,5 +1,6 @@
 #include "extend_lua_io.h"
 
+extern PrintConsole console_bottom;
 static SwkbdState software_keyboard;
 
 static void initKeyboard() {
@@ -7,14 +8,14 @@ static void initKeyboard() {
 	swkbdSetButton(&software_keyboard, SWKBD_BUTTON_LEFT, "Cancel", 0);
 	swkbdSetButton(&software_keyboard, SWKBD_BUTTON_RIGHT, "Ok", 1);
 	swkbdSetValidation(&software_keyboard, SWKBD_ANYTHING, 0, 2);
-	swkbdSetFeatures(&software_keyboard, SWKBD_ALLOW_HOME | SWKBD_ALLOW_POWER);
+	swkbdSetFeatures(&software_keyboard, SWKBD_DARKEN_TOP_SCREEN | SWKBD_ALLOW_RESET | SWKBD_ALLOW_HOME | SWKBD_ALLOW_POWER);
 }
 
 static int lua_read(lua_State *L) {
 	char buffer[1024] = {0};
-	const char *hint_text = luaL_optstring(L, 1, "");
+	const char *prefilled = luaL_optstring(L, 1, "");
 
-	swkbdSetHintText(&software_keyboard, hint_text);
+	swkbdSetInitialText(&software_keyboard, prefilled);
 	SwkbdButton button = swkbdInputText(&software_keyboard, buffer, sizeof(buffer));
 
 	if(button == SWKBD_BUTTON_RIGHT) {
@@ -24,7 +25,7 @@ static int lua_read(lua_State *L) {
 	return 0;
 }
 
-static int lua_readControls(lua_State *L) {
+static int lua_readcontrols(lua_State *L) {
 	u32 keys = hidKeysHeld();
 
 	lua_newtable(L);
@@ -46,8 +47,8 @@ static int lua_readControls(lua_State *L) {
 		lua_pushstring(L, "D-pad Right"); lua_pushboolean(L, keys & KEY_DRIGHT); lua_settable(L, -3);
 		lua_pushstring(L, "D-pad Down"); lua_pushboolean(L, keys & KEY_DDOWN); lua_settable(L, -3);
 
-		//supposedly doesn't work???
-		lua_pushstring(L, "Touchscreen"); lua_pushboolean(L, keys & KEY_TOUCH); lua_settable(L, -3);
+		//This doesn't work, but has a code in the API
+		//lua_pushstring(L, "Touchscreen"); lua_pushboolean(L, keys & KEY_TOUCH); lua_settable(L, -3);
 
 		lua_pushstring(L, "C-Stick Up"); lua_pushboolean(L, keys & KEY_CSTICK_UP); lua_settable(L, -3);
 		lua_pushstring(L, "C-Stick Left"); lua_pushboolean(L, keys & KEY_CSTICK_LEFT); lua_settable(L, -3);
@@ -66,8 +67,32 @@ static int lua_readControls(lua_State *L) {
 	return 1;
 }
 
-//HTTP
-static int lua_http_get(lua_State *L) {
+static int lua_readtouchscreen(lua_State *L) {
+	touchPosition touch;
+	hidTouchRead(&touch);
+	if(touch.px || touch.py) {
+		lua_pushinteger(L, touch.px);
+		lua_pushinteger(L, touch.py);
+		return 2;
+	}
+	return 0;
+}
+
+static int lua_writebottom(lua_State *L) {
+	int top = lua_gettop(L);
+	PrintConsole *previous_console = consoleSelect(&console_bottom);
+	for(int i = 1; i <= top; i++) {
+		printf("%s", lua_tostring(L, i));
+	}
+	consoleSelect(previous_console); //back to default
+
+	//return file obj, like write would
+	lua_getglobal(L, "io");
+	lua_getfield(L, -1, "stdout");
+	return 1;
+}
+
+static int lua_http_get(lua_State *L) { //check http.c for more details
 	const char *url = luaL_checkstring(L, 1);
 	if(strncmp(url, "http", 4) != 0) {
 		luaL_error(L, "Not an HTTP URL");
@@ -92,7 +117,15 @@ void luaextend_io(lua_State *L) {
 		lua_settable(L, -3);
 
 		lua_pushstring(L, "readControls");
-		lua_pushcfunction(L, lua_readControls);
+		lua_pushcfunction(L, lua_readcontrols);
+		lua_settable(L, -3);
+
+		lua_pushstring(L, "readTouchscreen");
+		lua_pushcfunction(L, lua_readtouchscreen);
+		lua_settable(L, -3);
+
+		lua_pushstring(L, "writeBottom");
+		lua_pushcfunction(L, lua_writebottom);
 		lua_settable(L, -3);
 
 		lua_pushstring(L, "http");

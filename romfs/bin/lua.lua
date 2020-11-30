@@ -6,8 +6,8 @@ end
 
 print("Type exit() to close")
 
-while os.mainLoop() and running do
-	local input = io.read("<Lua>")
+while os.consoleLoop() and running do
+	local input = io.read()
 	if input and string.len(input) > 0 then
 		print(">", input)
 		local ret, error = load(input)

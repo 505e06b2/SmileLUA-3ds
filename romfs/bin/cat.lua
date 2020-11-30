@@ -22,7 +22,7 @@ if #args > 0 then
 			if os.isfile(value) then
 				local f = io.open(value, "r")
 				if f then
-					print(f:read())
+					print(f:read("*all"))
 					f:close()
 				end
 			else
