@@ -114,7 +114,7 @@ _G["shell"] = {
 print("SmileLUA - " .. _VERSION)
 os.chdir("sdmc:/")
 printHelp()
-io.write(shell.ps1() .. "_") --save cursor before "cursor", so it's easier to overwrite
+io.write(shell.ps1() .. "_")
 while os.mainLoop() do
 	local controls = io.readControls()
 	if controls["Select"] and controls["Start"] then
