@@ -6,7 +6,7 @@ end
 
 print("Type exit() to close")
 
-while os.consoleLoop() and running do
+while os.mainLoop() and running do
 	local input = io.read()
 	if input and string.len(input) > 0 then
 		print(">", input)

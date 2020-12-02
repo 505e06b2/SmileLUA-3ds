@@ -1,0 +1,10 @@
+/smilelua.*
+/interpreter/build
+/interpreter/lua/src/*.o
+/interpreter/lua/src/*.a
+/interpreter/quirc/*.a
+/interpreter/quirc/src/*.o
+/interpreter/lua/src/lua
+/interpreter/lua/src/luac
+/old_lpp-3ds/
+
