@@ -111,7 +111,6 @@ _G["shell"] = {
 	end
 }
 
-io.http.get("http://192.168.0.50:8000/smilelua.cia")
 print("SmileLUA - " .. _VERSION)
 os.chdir("sdmc:/")
 printHelp()
