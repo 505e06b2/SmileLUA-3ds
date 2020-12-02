@@ -1,35 +1,12 @@
 #include "extend_lua_os.h"
 
-extern C3D_RenderTarget *top_screen;
-static unsigned int clearConsoleOutput = 0;
-
-static int lua_consoleloop(lua_State *L) { //for software rendering (hopefully just console)
+static int lua_mainloop(lua_State *L) {
 	int ret = aptMainLoop();
 	if(ret) {
-		if(clearConsoleOutput) { //set if renderloop runs
-			printf("\x1b[2J");
-			clearConsoleOutput = 0;
-		}
-		gfxFlushBuffers();
-		gfxSwapBuffers();
+		gfxSwapBuffersGpu();
 		gspWaitForVBlank();
 
 		hidScanInput();
-	}
-	lua_pushboolean(L, ret);
-	return 1;
-}
-
-static int lua_renderloop(lua_State *L) { //for hardware rendering
-	int ret = aptMainLoop();
-	if(ret) {
-		clearConsoleOutput = 1;
-		C3D_FrameEnd(0);
-
-		hidScanInput();
-		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-		C2D_TargetClear(top_screen, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
-		C2D_SceneBegin(top_screen);
 	}
 	lua_pushboolean(L, ret);
 	return 1;
@@ -131,12 +108,8 @@ static int lua_storageInfo(lua_State *L) {
 
 void luaextend_os(lua_State *L) {
 	lua_getglobal(L, "os");
-		lua_pushstring(L, "consoleLoop");
-		lua_pushcfunction(L, lua_consoleloop);
-		lua_settable(L, -3);
-
-		lua_pushstring(L, "renderLoop");
-		lua_pushcfunction(L, lua_renderloop);
+		lua_pushstring(L, "mainLoop");
+		lua_pushcfunction(L, lua_mainloop);
 		lua_settable(L, -3);
 
 		lua_pushstring(L, "sleep");

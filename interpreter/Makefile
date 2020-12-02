@@ -64,13 +64,13 @@ CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
 ASFLAGS	:=	$(ARCH)
 LDFLAGS	=	-specs=3dsx.specs $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lcitro2d -lcitro3d -llua -lctru -lm
+LIBS	:= -llua -lquirc -lctru -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:= $(CTRULIB) $(PORTLIBS) $(LUA)
+LIBDIRS	:= $(CTRULIB) $(PORTLIBS) $(QUIRC) $(LUA)
 
 
 #---------------------------------------------------------------------------------

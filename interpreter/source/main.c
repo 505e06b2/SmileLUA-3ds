@@ -1,5 +1,4 @@
 #include <3ds.h>
-#include <citro2d.h>
 
 #include <stdio.h>
 #include <string.h> //strcmp
@@ -17,9 +16,8 @@
 #define SD_ROOT "sdmc:/smilelua/"
 #define STARTUP "init.lua"
 
-C3D_RenderTarget *top_screen;
-PrintConsole console_bottom;
 PrintConsole console_top;
+PrintConsole console_bottom;
 
 int main() {
 	lua_State *L = NULL;
@@ -27,11 +25,7 @@ int main() {
 	gfxInitDefault();
 	consoleInit(GFX_BOTTOM, &console_bottom);
 	consoleInit(GFX_TOP, &console_top);
-
-	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
-	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
-	C2D_Prepare();
-	top_screen = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+	//pixel formats set to GSP_RGB565_OES
 
 	if(romfsInit()) {
 		puts("\x1b[31;1mCan't initialise RomFS\x1b[0m");
@@ -77,8 +71,6 @@ int main() {
 	}
 
 	lua_close(L);
-	C2D_Fini();
-	C3D_Fini();
 	gfxExit();
 	return 0;
 }

@@ -12,7 +12,7 @@ LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
 LIBS= -lm $(SYSLIBS) $(MYLIBS)
 
 AR= arm-none-eabi-ar rcu
-RANLIB= ranlib
+RANLIB= arm-none-eabi-ranlib
 RM= rm -f
 UNAME= uname
 
@@ -21,7 +21,7 @@ SYSLDFLAGS=
 SYSLIBS=
 
 ARCH=-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
-MYCFLAGS=$(ARCH)
+MYCFLAGS=-Wall -O2 -mword-relocations -fomit-frame-pointer -ffunction-sections $(ARCH)
 MYLDFLAGS=$(ARCH)
 MYLIBS=
 MYOBJS=

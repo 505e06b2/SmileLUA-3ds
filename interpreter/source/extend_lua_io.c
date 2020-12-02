@@ -79,10 +79,11 @@ static int lua_readtouchscreen(lua_State *L) {
 }
 
 static int lua_readqr(lua_State *L) {
-	char *str = qr_read();
-	if(str) {
-		lua_pushstring(L, str);
-		free(str);
+	struct quirc_data *data = qr_read();
+	if(data) {
+		lua_pushlstring(L, (char *)data->payload, data->payload_len);
+		free(data);
+		return 1;
 	}
 	return 0;
 }
@@ -108,10 +109,12 @@ static int lua_http_get(lua_State *L) { //check http.c for more details
 		return 0;
 	}
 
-	char *ret = http_get(url);
-	if(ret) {
-		lua_pushstring(L, ret);
-		free(ret);
+	http_string_t http_ret;
+
+	http_get(url, &http_ret);
+	if(http_ret.ptr) {
+		lua_pushlstring(L, (char *)http_ret.ptr, http_ret.length);
+		free(http_ret.ptr);
 		return 1;
 	}
 	return 0;
@@ -131,6 +134,10 @@ void luaextend_io(lua_State *L) {
 
 		lua_pushstring(L, "readTouchscreen");
 		lua_pushcfunction(L, lua_readtouchscreen);
+		lua_settable(L, -3);
+
+		lua_pushstring(L, "readQR");
+		lua_pushcfunction(L, lua_readqr);
 		lua_settable(L, -3);
 
 		lua_pushstring(L, "writeBottom");

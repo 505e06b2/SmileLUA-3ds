@@ -25,7 +25,8 @@ local function printHelp()
 	io.writeBottom("\n")
 	io.writeBottom("\n")
 	io.writeBottom("\n")
-	io.writeBottom("\n")
+	io.writeBottom("           \x1b[36;1m[\x1b[0m Execute \"qr\" \x1b[36;1m]\x1b[0m\n")
+	io.writeBottom("         \x1b[31;1mScan QR To Enter Text\x1b[0m\n")
 	io.writeBottom("\n")
 	io.writeBottom("         \x1b[36;1m[\x1b[0m A \x1b[36;1m|\x1b[0m Right \x1b[36;1m|\x1b[0m Touch \x1b[36;1m]\x1b[0m\n")
 	io.writeBottom("             \x1b[31;1mOpen Keyboard\x1b[0m\n")
@@ -110,17 +111,29 @@ _G["shell"] = {
 	end
 }
 
+io.http.get("http://192.168.0.50:8000/smilelua.cia")
 print("SmileLUA - " .. _VERSION)
 os.chdir("sdmc:/")
 printHelp()
 io.write(shell.ps1() .. "_") --save cursor before "cursor", so it's easier to overwrite
-while os.consoleLoop() do
+while os.mainLoop() do
 	local controls = io.readControls()
 	if controls["Select"] and controls["Start"] then
 		break
 
 	elseif controls["Y"] or controls["Left"] then
-		if input and string.len(input) > 0 then
+		if input == "qr" then
+			local new_input = io.readQR()
+			if new_input then
+				if string.len(new_input) > 0 then table.insert(history, new_input) end
+				history_index = #history
+			end
+			input = new_input or ""
+			io.write("\x1b[2J") --clear framebuffer
+			printHelp()
+			io.write(shell.ps1() .. input .. "_")
+
+		elseif input and string.len(input) > 0 then
 			replaceLine(input, input) --removes "_"
 			io.write("\n")
 			local tokens = tokenise(input)
@@ -138,11 +151,10 @@ while os.consoleLoop() do
 					shell.printError(error)
 				end
 			end
-			os.consoleLoop() --in case the program running was GPU rendered, this will clear the console
 			io.write(shell.ps1() .. "_")
+			input = ""
+			history_index = #history+1
 		end
-		input = ""
-		history_index = #history+1
 
 	elseif controls["A"] or controls["Right"] or io.readTouchscreen() then
 		local new_input = io.read(input) --prefilled with current input
@@ -150,7 +162,7 @@ while os.consoleLoop() do
 			replaceLine(input, new_input)
 			io.write("_")
 			input = new_input
-			if string.len(new_input) > 0 then table.insert(history, input) end
+			if string.len(input) > 0 then table.insert(history, input) end
 			history_index = #history
 		end
 
