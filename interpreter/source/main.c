@@ -25,7 +25,7 @@ int main() {
 	gfxInitDefault();
 	consoleInit(GFX_BOTTOM, &console_bottom);
 	consoleInit(GFX_TOP, &console_top);
-	//pixel formats set to GSP_RGB565_OES
+	//pixel formats set to GSP_RGB565_OES - double buffering disabled
 
 	if(romfsInit()) {
 		puts("\x1b[31;1mCan't initialise RomFS\x1b[0m");
@@ -34,7 +34,7 @@ int main() {
 	L = luaL_newstate(); // open Lua
 	if(L == NULL) return -1;
 	luaL_openlibs(L);
-	luaextend_io(L);
+	luaextend_io(L); //must come after consoleinit and mustn't change pixel format
 	luaextend_os(L);
 	luaextend_table(L);
 

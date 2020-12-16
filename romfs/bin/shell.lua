@@ -53,7 +53,7 @@ local function replaceLine(old, new)
 end
 
 local input = ""
-local history = {}
+local history = {"qr"} --add qr immediately, so technically no touch has to be performed
 local history_index = 0
 local history_cooldown = false --this is for repeating keys
 local function moveHistory(direction)
@@ -115,6 +115,7 @@ print("SmileLUA - " .. _VERSION)
 os.chdir("sdmc:/")
 printHelp()
 io.write(shell.ps1() .. "_")
+
 while os.mainLoop() do
 	local controls = io.readControls()
 	if controls["Select"] and controls["Start"] then

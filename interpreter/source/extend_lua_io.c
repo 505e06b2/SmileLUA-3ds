@@ -150,4 +150,6 @@ void luaextend_io(lua_State *L) {
 			lua_pushcfunction(L, lua_http_get);
 			lua_settable(L, -3);
 		lua_settable(L, -3);
+
+	luaextend_io_addFramebuffer(L);
 }
