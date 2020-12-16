@@ -122,6 +122,7 @@ while os.mainLoop() do
 		break
 
 	elseif controls["Y"] or controls["Left"] then
+		--specific case for qr
 		if input == "qr" then
 			local new_input = io.readQR()
 			if new_input then
@@ -133,6 +134,7 @@ while os.mainLoop() do
 			printHelp()
 			io.write(shell.ps1() .. input .. "_")
 
+		--execute command
 		elseif input and string.len(input) > 0 then
 			replaceLine(input, input) --removes "_"
 			io.write("\n")
@@ -156,6 +158,7 @@ while os.mainLoop() do
 			history_index = #history+1
 		end
 
+	--open keyboard
 	elseif controls["A"] or controls["Right"] or io.readTouchscreen() then
 		local new_input = io.read(input) --prefilled with current input
 		if new_input then
@@ -166,7 +169,8 @@ while os.mainLoop() do
 			history_index = #history
 		end
 
-	elseif history_cooldown and (controls["Up"] or controls["Down"] or controls["X"] or controls["B"]) then
+	--misc hardware controls
+	elseif history_cooldown and (controls["Up"] or controls["Down"] or controls["X"] or controls["B"]) then --skip
 	elseif controls["Up"] or controls["X"] then
 		moveHistory(-1)
 	elseif controls["Down"] or controls["B"] then
