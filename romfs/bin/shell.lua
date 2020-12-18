@@ -154,6 +154,7 @@ while os.mainLoop() do
 				end
 			end
 			io.write(shell.ps1() .. "_")
+			printHelp()
 			input = ""
 			history_index = #history+1
 		end
