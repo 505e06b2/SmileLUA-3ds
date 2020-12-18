@@ -22,7 +22,6 @@ static int http_close(lua_State *L) {
 	if(context) {
 		httpcCancelConnection(context);
 		httpcCloseContext(context);
-		*(&context) = NULL;
 	}
 	return 0;
 }
