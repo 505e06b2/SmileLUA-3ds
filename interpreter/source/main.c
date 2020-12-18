@@ -71,6 +71,7 @@ int main() {
 	}
 
 	lua_close(L);
+	httpcExit();
 	gfxExit();
 	return 0;
 }

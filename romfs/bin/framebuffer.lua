@@ -47,7 +47,7 @@ io.writeBottom(
 	" Middle Bottom: ", checkColour(io.framebuffer.top[#io.framebuffer.top-120]), "\n",
 	"\n",
 	" Top Right:     ", checkColour(io.framebuffer.top[400]), "\n", --could also use io.framebuffer.topRaw[#io.framebuffer.topRaw]
-	" Middle Right:  ", checkColour(io.framebuffer.topRaw[#io.framebuffer.top-120]), "\n",
+	" Middle Right:  ", checkColour(io.framebuffer.topRaw[#io.framebuffer.topRaw-120]), "\n",
 	" Bottom Right:  ", checkColour(io.framebuffer.top[#io.framebuffer.top]), "\n",
 
 	"\n\nPress B to exit"

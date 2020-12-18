@@ -116,8 +116,6 @@ static void add_framebuffer_type_to_lua(lua_State *L, const char *name, const ch
 }
 
 void luaextend_io_addFramebuffer(lua_State *L) {
-
-
 	add_metatable_to_lua(L, "framebuffer_top", SCREEN_TOP, FB_ROTATED);
 	add_metatable_to_lua(L, "framebuffer_bottom", SCREEN_BOTTOM, FB_ROTATED);
 

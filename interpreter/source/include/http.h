@@ -3,12 +3,11 @@
 
 #include <3ds.h>
 #include <stdlib.h>
+#include <string.h>
 
-typedef struct http_string_s {
-	u8 *ptr;
-	size_t length;
-} http_string_t;
+#include <lua.h>
+#include <lauxlib.h>
 
-void http_get(const char *, http_string_t *);
+void luaextend_io_addHTTP(lua_State *);
 
 #endif

@@ -54,7 +54,7 @@ end
 
 local input = ""
 local history = {"qr"} --add qr immediately, so technically no touch has to be performed
-local history_index = 0
+local history_index = #history+1
 local history_cooldown = false --this is for repeating keys
 local function moveHistory(direction)
 	history_cooldown = true

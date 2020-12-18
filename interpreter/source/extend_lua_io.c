@@ -102,24 +102,6 @@ static int lua_writebottom(lua_State *L) {
 	return 1;
 }
 
-static int lua_http_get(lua_State *L) { //check http.c for more details
-	const char *url = luaL_checkstring(L, 1);
-	if(strncmp(url, "http", 4) != 0) {
-		luaL_error(L, "Not an HTTP URL");
-		return 0;
-	}
-
-	http_string_t http_ret;
-
-	http_get(url, &http_ret);
-	if(http_ret.ptr) {
-		lua_pushlstring(L, (char *)http_ret.ptr, http_ret.length);
-		free(http_ret.ptr);
-		return 1;
-	}
-	return 0;
-}
-
 void luaextend_io(lua_State *L) {
 	initKeyboard();
 
@@ -144,12 +126,6 @@ void luaextend_io(lua_State *L) {
 		lua_pushcfunction(L, lua_writebottom);
 		lua_settable(L, -3);
 
-		lua_pushstring(L, "http");
-		lua_newtable(L);
-			lua_pushstring(L, "get");
-			lua_pushcfunction(L, lua_http_get);
-			lua_settable(L, -3);
-		lua_settable(L, -3);
-
 	luaextend_io_addFramebuffer(L);
+	luaextend_io_addHTTP(L);
 }
