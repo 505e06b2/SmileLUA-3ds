@@ -12,7 +12,7 @@ if #args >= 1 then
 		filename = args[2]
 	end
 
-	io.write("Downloading ", args[1], "\n")
+	io.write("Downloading...\n")
 
 	local r = io.http.get(args[1])
 	local f = io.open(filename, "w")

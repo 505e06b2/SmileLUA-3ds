@@ -13,10 +13,10 @@ if #args == 2 then
 			destination:close()
 			source:close()
 		else
-			shell.printError("cp: " .. destination .. ": could not be opened")
+			shell.printError("cp: " .. args[2] .. ": could not be opened")
 		end
 	else
-		shell.printError("cp: " .. source .. ": could not be opened")
+		shell.printError("cp: " .. args[1] .. ": could not be opened")
 	end
 else
 	printHelp()

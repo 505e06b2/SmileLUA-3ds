@@ -126,7 +126,7 @@ void luaextend_io_addFramebuffer(lua_State *L) {
 	lua_getglobal(L, "io");
 		lua_pushstring(L, "framebuffer");
 		lua_newtable(L);
-			add_framebuffer_type_to_lua(L, "topRaw", "framebuffer_top_raw");
+			add_framebuffer_type_to_lua(L, "topRaw", "framebuffer_top_raw"); //turn this into io.framebuffer.top.raw in the future with __index
 			add_framebuffer_type_to_lua(L, "bottomRaw", "framebuffer_bottom_raw");
 
 			add_framebuffer_type_to_lua(L, "top", "framebuffer_top");
