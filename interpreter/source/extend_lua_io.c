@@ -78,6 +78,32 @@ static int lua_readtouchscreen(lua_State *L) {
 	return 0;
 }
 
+static int lua_readcirclepad(lua_State *L) {
+	circlePosition pos;
+	hidCircleRead(&pos);
+	lua_pushinteger(L, pos.dx);
+	lua_pushinteger(L, pos.dy);
+	return 2;
+}
+
+static int lua_readgyroscope(lua_State *L) {
+	angularRate axis;
+	hidGyroRead(&axis);
+	lua_pushinteger(L, axis.x); //roll
+	lua_pushinteger(L, axis.y); //yaw
+	lua_pushinteger(L, axis.z); //pitch
+	return 3;
+}
+
+static int lua_readaccelerometer(lua_State *L) {
+	accelVector axis;
+	hidAccelRead(&axis);
+	lua_pushinteger(L, axis.x);
+	lua_pushinteger(L, axis.y);
+	lua_pushinteger(L, axis.z);
+	return 3;
+}
+
 static int lua_readqr(lua_State *L) {
 	struct quirc_data *data = qr_read();
 	if(data) {
@@ -116,6 +142,18 @@ void luaextend_io(lua_State *L) {
 
 		lua_pushstring(L, "readTouchscreen");
 		lua_pushcfunction(L, lua_readtouchscreen);
+		lua_settable(L, -3);
+
+		lua_pushstring(L, "readCirclePad");
+		lua_pushcfunction(L, lua_readcirclepad);
+		lua_settable(L, -3);
+
+		lua_pushstring(L, "readGyroscope");
+		lua_pushcfunction(L, lua_readgyroscope);
+		lua_settable(L, -3);
+
+		lua_pushstring(L, "readAccelerometer");
+		lua_pushcfunction(L, lua_readaccelerometer);
 		lua_settable(L, -3);
 
 		lua_pushstring(L, "readQR");

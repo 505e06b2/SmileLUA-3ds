@@ -23,6 +23,8 @@ int main() {
 	lua_State *L = NULL;
 
 	gfxInitDefault();
+	httpcInit(0);
+	mcuHwcInit(); //citra doesn't like this
 	consoleInit(GFX_BOTTOM, &console_bottom);
 	consoleInit(GFX_TOP, &console_top);
 	//pixel formats set to GSP_RGB565_OES - double buffering disabled
@@ -71,6 +73,7 @@ int main() {
 	}
 
 	lua_close(L);
+	mcuHwcExit();
 	httpcExit();
 	gfxExit();
 	return 0;

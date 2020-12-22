@@ -111,7 +111,8 @@ _G["shell"] = {
 	end
 }
 
-print("SmileLUA - " .. _VERSION)
+print(string.format("  Battery: %d%%  |  System Version: %13s\n", os.batteryPercent(), os.systemVersion()))
+print(string.format("                SmileLUA - %s\n\n\n", _VERSION))
 os.chdir("sdmc:/")
 printHelp()
 io.write(shell.ps1() .. "_")

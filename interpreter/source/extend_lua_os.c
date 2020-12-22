@@ -106,6 +106,22 @@ static int lua_storageInfo(lua_State *L) {
 	return 1;
 }
 
+//turn into metatable __index value
+static int lua_batterypercent(lua_State *L) {
+	u8 level;
+	MCUHWC_GetBatteryLevel(&level);
+	lua_pushinteger(L, level);
+	return 1;
+}
+
+//turn into metatable __index value
+static int lua_systemversionstring(lua_State *L) {
+	char buffer[16] = {0};
+	osGetSystemVersionDataString(NULL, NULL, buffer, sizeof(buffer));
+	lua_pushstring(L, buffer);
+	return 1;
+}
+
 void luaextend_os(lua_State *L) {
 	lua_getglobal(L, "os");
 		lua_pushstring(L, "mainLoop");
@@ -146,5 +162,13 @@ void luaextend_os(lua_State *L) {
 
 		lua_pushstring(L, "storageInfo");
 		lua_pushcfunction(L, lua_storageInfo);
+		lua_settable(L, -3);
+
+		lua_pushstring(L, "batteryPercent");
+		lua_pushcfunction(L, lua_batterypercent);
+		lua_settable(L, -3);
+
+		lua_pushstring(L, "systemVersion");
+		lua_pushcfunction(L, lua_systemversionstring);
 		lua_settable(L, -3);
 }

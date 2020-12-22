@@ -50,11 +50,11 @@ io.writeBottom(
 	" Middle Right:  ", checkColour(io.framebuffer.topRaw[#io.framebuffer.topRaw-120]), "\n",
 	" Bottom Right:  ", checkColour(io.framebuffer.top[#io.framebuffer.top]), "\n",
 
-	"\n\nPress B to exit"
+	"\n\nPress Start to exit"
 )
 
 --infinite wait - safe since os.mainLoop is called every loop
-while os.mainLoop() and not io.readControls()["B"] do end
+while os.mainLoop() and not io.readControls()["Start"] do end
 
 io.write("\x1b[2J")
 io.writeBottom("\x1b[2J")

@@ -75,8 +75,6 @@ static int http_get(lua_State *L) {
 }
 
 void luaextend_io_addHTTP(lua_State *L) {
-	httpcInit(0);
-
 	luaL_newmetatable(L, "http_get");
 		lua_pushstring(L, "__index");
 		lua_pushcfunction(L, http_get_index);
