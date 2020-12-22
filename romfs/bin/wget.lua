@@ -24,6 +24,9 @@ if #args >= 1 then
 		f:write(block)
 		written = written + #block
 		io.write("\rWritten ", written, " bytes")
+		if r.size then
+			io.write(string.format(" - %f%%", (written / r.size * 100)))
+		end
 	end
 	f:close()
 	r:close()

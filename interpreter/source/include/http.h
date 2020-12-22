@@ -8,6 +8,11 @@
 #include <lua.h>
 #include <lauxlib.h>
 
+typedef struct http_response_s {
+	httpcContext context;
+	u32 size;
+} HTTPResponse;
+
 void luaextend_io_addHTTP(lua_State *);
 
 #endif
