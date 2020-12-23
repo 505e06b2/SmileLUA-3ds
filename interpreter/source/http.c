@@ -39,6 +39,7 @@ static int http_get_index(lua_State *L) {
 		return 1;
 
 	} else if(strcmp("size", index) == 0) {
+		if(r->size == 0) return 0; //nil if no size
 		lua_pushinteger(L, r->size);
 		return 1;
 	}
